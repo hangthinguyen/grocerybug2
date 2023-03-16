@@ -1,0 +1,14 @@
+.InputItemsBody {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+
+  form {
+    display: flex;
+    gap: 10px;
+  }
+}
