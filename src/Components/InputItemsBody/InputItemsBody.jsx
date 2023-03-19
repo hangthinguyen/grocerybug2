@@ -6,19 +6,22 @@ import styles from "./InputItemsBody.module.scss";
 const InputItemsBpdy = () => {
   const [items, setItems] = useState([]);
 
-  const handleOnSubmit = useCallback(
-    (userInput) => {
-      setItems([
-        ...items,
-        {
-          id: Math.random() * 1000,
-          userInput: userInput,
-          checked: false,
-        },
-      ]);
-    },
-    [items]
-  );
+  const [userInput, setUserInput] = useState("");
+
+  const handleUserInput = useCallback((e) => {
+    setUserInput(e.target.value);
+  }, []);
+
+  const handleOnSubmit = useCallback(() => {
+    setItems([
+      ...items,
+      {
+        id: Math.random() * 1000,
+        userInput: userInput,
+        checked: false,
+      },
+    ]);
+  }, [items, userInput]);
 
   const handleOnChecked = useCallback(
     (todoId) => {
@@ -48,13 +51,36 @@ const InputItemsBpdy = () => {
     [items]
   );
 
+  const handleOnClear = useCallback(() => {
+    setItems([]);
+  }, []);
+
+  const handleOnEdit = useCallback(
+    (todoid) => {
+      const itemsClone = structuredClone(items);
+
+      itemsClone.forEach((item) => {
+        if (item.id === todoid) {
+          console.log(item.userInput);
+        }
+      });
+    },
+    [items]
+  );
+
   return (
     <div className={styles.InputItemsBody}>
-      <Form onSubmit={handleOnSubmit} />
+      <Form
+        onChange={handleUserInput}
+        userInput={userInput}
+        onSubmit={handleOnSubmit}
+      />
       <ItemsList
         items={items}
         onCheck={handleOnChecked}
         onDelete={handleOnItemDelete}
+        onClear={handleOnClear}
+        onEdit={handleOnEdit}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import Item from "../Item/Item";
 import styles from "./ItemsList.module.scss";
 
-const ItemsList = ({ items, onCheck, onDelete }) => {
+const ItemsList = ({ items, onCheck, onDelete, onClear, onEdit }) => {
   return (
     <div className={styles.ItemsList}>
       {items.map((item) => (
@@ -12,10 +12,13 @@ const ItemsList = ({ items, onCheck, onDelete }) => {
           userInput={item.userInput}
           onCheck={() => onCheck(item.id)}
           onDelete={() => onDelete(item.id)}
+          onEdit={() => onEdit(item.id)}
         />
       ))}
 
-      <p className={styles.ClearBtn}>Clear Items</p>
+      <p className={styles.ClearBtn} onClick={onClear}>
+        Clear Items
+      </p>
     </div>
   );
 };
