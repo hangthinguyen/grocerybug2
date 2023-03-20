@@ -10,24 +10,25 @@ const InputItemsBpdy = () => {
 
   const [editing, setEditing] = useState(false);
 
-  const handleUserInput = useCallback((e) => {
+  const [Id, setId] = useState(0);
+
+  const [texChange, setTextChange] = useState();
+
+  const handleUserInput = useCallback((e, id) => {
     setUserInput(e.target.value);
   }, []);
 
-  const handleOnSubmit = useCallback(
-    (todoid) => {
-      setItems([
-        ...items,
-        {
-          id: Math.random() * 1000,
-          userInput: userInput,
-          checked: false,
-        },
-      ]);
-      setUserInput("");
-    },
-    [items, userInput]
-  );
+  const handleOnSubmit = useCallback(() => {
+    setItems([
+      ...items,
+      {
+        id: Math.random() * 1000,
+        userInput: userInput,
+        checked: false,
+      },
+    ]);
+    setUserInput("");
+  }, [items, userInput]);
 
   const handleOnChecked = useCallback(
     (todoId) => {
@@ -59,26 +60,43 @@ const InputItemsBpdy = () => {
 
   const handleOnClear = useCallback(() => {
     setItems([]);
+    setEditing(false);
+    setUserInput("");
   }, []);
 
-  const handleOnEditIcon = useCallback(
+  const handleOnEdit = useCallback(
     (todoid) => {
-      console.log();
       const itemsClone = structuredClone(items);
 
       itemsClone.forEach((item) => {
         if (item.id === todoid) {
           setUserInput(item.userInput);
+          setId(item.id);
         }
       });
+      setItems(itemsClone);
       setEditing(true);
     },
     [items]
   );
 
-  const handleEditBtnChange = useCallback(() => {
-    setEditing(false);
-  }, []);
+  console.log(Id);
+
+  const handleEditBtnChange = useCallback(
+    (todoid) => {
+      const itemsClone = structuredClone(items);
+
+      itemsClone.forEach((item) => {
+        if (todoid === Id) {
+          item.userInput = userInput;
+        }
+        return item;
+      });
+      setItems(itemsClone);
+      setUserInput("");
+    },
+    [Id, items, userInput]
+  );
 
   return (
     <div className={styles.InputItemsBody}>
@@ -88,14 +106,14 @@ const InputItemsBpdy = () => {
         onSubmit={handleOnSubmit}
         setEditing={setEditing}
         editing={editing}
-        onEditBtn={handleEditBtnChange}
+        onEdit={handleEditBtnChange}
       />
       <ItemsList
         items={items}
         onCheck={handleOnChecked}
         onDelete={handleOnItemDelete}
         onClear={handleOnClear}
-        onEdit={handleOnEditIcon}
+        onEdit={handleOnEdit}
       />
     </div>
   );
